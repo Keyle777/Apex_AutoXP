@@ -6,6 +6,7 @@ from psutil import process_iter
 from send import *
 import configparser
 import datetime
+from orc import *
 
 class ApexBot:
     def __init__(self, resolution):
@@ -54,6 +55,12 @@ class ApexBot:
         elif pyautogui.locateOnScreen(f"Game Assets/EscCloseLong_{self.resolution}.png", confidence=.7) is not None:
             self.in_game = True
             pydirectinput.press("escape")
+            # 发送得分
+            XPscore = ScreenCaptureOCR().capture_and_ocr()
+            now = datetime.datetime.now()
+            formatted_time = now.strftime("%Y年%m月%d日%H时%M分%S秒")
+            sendEmail =  DailySentenceEmailSender(f"游戏于{formatted_time}结束，此局游戏得到的经验值为{XPscore}，正在准备进入下一场游戏",self.sender_email,self.sender_password,self.receiver_email)
+            sendEmail.send_email()
         # 开始排队
         elif pyautogui.locateOnScreen(f"Game Assets/ready_button{self.resolution}.png", confidence=.8) is not None:
             self.queue_into_game()
