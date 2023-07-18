@@ -3,13 +3,22 @@ import pydirectinput
 from time import sleep
 from random import randint
 from psutil import process_iter
-
+from send import *
+import configparser
+import datetime
 
 class ApexBot:
     def __init__(self, resolution):
         self.in_game = False
         self.resolution = resolution
         self.tries_to_find_fill_button = 0
+        # 读取配置文件中的信息
+        config = configparser.ConfigParser()
+        config.read('emailInfo.ini')
+        self.sender_email = config.get('email', 'sender_email')
+        self.sender_password = config.get('email', 'sender_password')
+        self.receiver_email = config.get('email', 'receiver_email')
+        self.count = 0
 
     def xp_grinding(self):
         # 检查Apex是否正在运行
@@ -65,9 +74,16 @@ class ApexBot:
         elif pyautogui.locateOnScreen(f"Game Assets/continue_error{self.resolution}.png", confidence=.8) is not None or pyautogui.locateOnScreen(f"Game Assets/continue_error2_{self.resolution}.png", confidence=.8):
             pydirectinput.press("escape")
             self.in_game = False
+            now = datetime.datetime.now()
+            formatted_time = now.strftime("%Y年%m月%d日%H时%M分%S秒")
+            sendEmail =  DailySentenceEmailSender(f"游戏于{formatted_time}发生错误，正在重新加入游戏中",self.sender_email,self.sender_password,self.receiver_email)
+            sendEmail.send_email()
         else:
             self.in_game = False
+            sendEmail =  DailySentenceEmailSender(f"游戏未开始，正在准备进入游戏！",self.sender_email,self.sender_password,self.receiver_email)
+            sendEmail.send_email()
 
+            
     def kd_lowering(self, interact_key, tactical_key):
         # 检查Apex是否正在运行
         if "r5apex.exe" not in [p.name() for p in process_iter()]:
@@ -125,7 +141,12 @@ class ApexBot:
     # 从主菜单排队进行匹配
     def queue_into_game(self):
         try:
-            print("正在尝试排队进入游戏")
+            now = datetime.datetime.now()
+            formatted_time = now.strftime("%Y年%m月%d日%H时%M分%S秒")
+            self.count += 1  # 更新计数器
+            print(f"正在尝试排队进入游戏---正在进行第{self.count}次排队中，当前时间:{formatted_time}")
+            sendEmail =  DailySentenceEmailSender(f"正在进行第{self.count}次排队中，当前时间:{formatted_time}",self.sender_email,self.sender_password,self.receiver_email)
+            sendEmail.send_email()
             if pyautogui.locateOnScreen(f"Game Assets/fill_teammates{self.resolution}.png", confidence=.6) is not None:
                 self.tries_to_find_fill_button = 0
                 fill_button_cords = pyautogui.center(

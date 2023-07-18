@@ -4,6 +4,7 @@ from bot_functions import *
 from other_functions import *
 from psutil import process_iter
 
+
 # 创建窗口对象
 root = Tk()
 
