@@ -20,6 +20,31 @@ class ApexBot:
             self.in_game = True
             pydirectinput.press("space")
             sleep(randint(0, 10))
+        elif pyautogui.locateOnScreen(f"Game Assets/dianchi_HD.png", confidence=.8) is not None:
+            self.in_game = True
+            # 按下鼠标左键
+            pydirectinput.mouseDown(button='left')
+            # 暂停一段时间，例如1秒钟
+            sleep(randint(0, 5))
+            # 释放鼠标左键
+            pydirectinput.mouseUp(button='left')
+            pydirectinput.press("space")
+        elif pyautogui.locateOnScreen(f"Game Assets/continue_{self.resolution}.png", confidence=.7) is not None:
+            self.in_game = True
+            # 按前进键键
+            pydirectinput.press("space")
+        elif pyautogui.locateOnScreen(f"Game Assets/space_{self.resolution}.png", confidence=.7) is not None:
+            self.in_game = True
+            pydirectinput.press("space")
+        elif pyautogui.locateOnScreen(f"Game Assets/scoreboard_{self.resolution}.png", confidence=.7) is not None:
+            self.in_game = True
+            pydirectinput.press("escape")
+        elif pyautogui.locateOnScreen(f"Game Assets/Esc_{self.resolution}.png", confidence=.7) is not None:
+            self.in_game = True
+            pydirectinput.press("escape")
+        elif pyautogui.locateOnScreen(f"Game Assets/EscCloseLong_{self.resolution}.png", confidence=.7) is not None:
+            self.in_game = True
+            pydirectinput.press("escape")
         # 开始排队
         elif pyautogui.locateOnScreen(f"Game Assets/ready_button{self.resolution}.png", confidence=.8) is not None:
             self.queue_into_game()

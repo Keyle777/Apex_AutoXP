@@ -150,7 +150,7 @@ def launch_bot():
                 tactical = entry2.get()
                 if entry1.get() == entry1.placeholder:
                     interact = "e"
-                if entry2.get() == entry2.placeholder:
+                if entry2.get() == entry2.placqeholder:
                     tactical = "q"
                 apex_bot.kd_lowering(interact_key=interact.lower(), tactical_key=tactical.lower())
 
